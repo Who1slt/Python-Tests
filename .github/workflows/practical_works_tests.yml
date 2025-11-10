@@ -1,0 +1,83 @@
+name: Practical Works Tests
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+jobs:
+  simple_tests:
+    name: Simple Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          pytest tests/test_pytest.py -v
+          python -m unittest discover tests -v
+
+  advanced_tests:
+    name: Advanced Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          pytest tests/test_pytest_parameterized.py -v
+          pytest tests/test_pytest_exceptions.py -v
+          pytest tests/test_pytest_integrated.py -v
+          pytest tests/test_unittest_mock.py -v
+
+  api_tests:
+    name: API Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Installing Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          pytest tests/test_pytest_restapi.py -v
+          pytest tests/test_pytest_site.py -v
+
+  final_summary:
+    name: Final Test Summary
+    runs-on: ubuntu-latest
+    needs: [simple_tests, advanced_tests, api_tests]
+    if: success()
+
+    steps:
+      - name: Success Message
+        run: echo "Тесты прошли успешно!"
