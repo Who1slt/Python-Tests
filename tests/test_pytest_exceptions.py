@@ -37,5 +37,3 @@ class TestCalculatorExceptionsAndBoundary:
             assert math.isnan(result)
         else:
             assert result == expected
-
-

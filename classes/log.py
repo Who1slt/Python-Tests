@@ -11,8 +11,7 @@ class Log:
             'operation': operation,
             'a': a,
             'b': b,
-            'result': result,
-            'timestamp': None
+            'result': result
         })
     
     def get_last_operation(self):

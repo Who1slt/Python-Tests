@@ -2,25 +2,25 @@ import pytest
 from classes.calculator import Calculator, State
 from classes.log import Log
 
-class TestCalculatorWithHistory:
+class TestCalculatorWithLog:
 
     @pytest.fixture
     def setup(self):
         return Calculator(), Log()
     
-    def test_calculator_operations_saved_to_history(self, setup):
-        calc, history = setup
+    def test_calculator_operations_saved_to_log(self, setup):
+        calc, log = setup
         
         result1 = calc.add(5, 3)
         result2 = calc.division(10, 2)
         
-        history.add_operation('+', 5, 3, result1)
-        history.add_operation('/', 10, 2, result2)
+        log.add_operation('+', 5, 3, result1)
+        log.add_operation('/', 10, 2, result2)
         
-        assert len(history.get_all_operations()) == 2
+        assert len(log.get_all_operations()) == 2
     
     def test_operations_order(self, setup):
-        calc, history = setup
+        calc, log = setup
         
         operations = [
             (calc.add, '+', 2, 3),
@@ -30,18 +30,18 @@ class TestCalculatorWithHistory:
         
         for calc_method, op_symbol, a, b in operations:
             result = calc_method(a, b)
-            history.add_operation(op_symbol, a, b, result)
+            log.add_operation(op_symbol, a, b, result)
         
-        assert history.get_last_operation()['operation'] == '/'
-        assert history.get_last_operation()['a'] == 20
-        assert history.get_last_operation()['b'] == 4
-        assert history.get_last_operation()['result'] == 5.0
+        assert log.get_last_operation()['operation'] == '/'
+        assert log.get_last_operation()['a'] == 20
+        assert log.get_last_operation()['b'] == 4
+        assert log.get_last_operation()['result'] == 5.0
 
     def test_error_operations_not_saved(self, setup):
-        calc, history = setup
+        calc, log = setup
         result = calc.division(10, 0)
         
         if result != State.Error:
-            history.add_operation('/', 10, 0, result)
+            log.add_operation('/', 10, 0, result)
         
-        assert len(history.get_all_operations()) == 0
+        assert len(log.get_all_operations()) == 0
